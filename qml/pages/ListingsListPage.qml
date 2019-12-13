@@ -29,6 +29,19 @@ ListPage {
                        : qsTr("No listings available.")
 
     delegate: SimpleRow {
+        item: listModel.get(index)
+        autoSizeImage: true
+        imageMaxSize: dp(40)
+        image.fillMode: Image.PreserveAspectCrop
 
+        onSelected: navigationStack.popAllExceptFirstAndPush(detailPageComponent, {model: item.model})
+    }
+
+    listView.footer: VisibilityRefreshHandler {
+        visible: !favorites && dataModel.numListings < dataModel.numTotalListings
+        onRefresh: {
+            scrollPos = listView.getScrollPosition()
+            logic.loadNextPage()
+       }
     }
 }
