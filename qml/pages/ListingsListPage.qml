@@ -10,7 +10,7 @@ ListPage {
 
     rightBarItem: ActivityIndicatorBarItem {
         visible: dataModel.loading
-    }
+     }
 
     model: JsonListModel {
         id: listModel

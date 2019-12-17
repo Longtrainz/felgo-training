@@ -7,6 +7,10 @@ Item {
 
     signal listingsReceived
 
+    readonly property var listings: _.createListingsModel(_.listings)
+    readonly property alias numTotalListings: _.numTotalListings
+    readonly property int numListings: _.listings.length
+
     Client {
         id: client
     }
@@ -38,7 +42,7 @@ Item {
             if (successCodes.indexOf(code) >= 0) {
                 // found locations
                 сurrentPage = parseInt(response.page)
-                listings.concat(response.listings)
+                listings = listings.concat(response.listings)
                 numTotalListings = response.total_results || 0
                 listingsReceived()
             } else if (ambiguousCodes.indexOf(code) >= 0) {
@@ -48,6 +52,22 @@ Item {
             } else {
                locations = []
             }
+        }
+
+
+        function createListingsModel (source, parseValues) {
+            return source.map(function(data) {
+                if(parseValues) {
+                    data = JSON.parse(data)
+                }
+
+                return {
+                  text: data.price_formatted,
+                  detailText: data.title,
+                  image: data.thumb_url,
+                  model: data
+                }
+              })
         }
     }
 }
